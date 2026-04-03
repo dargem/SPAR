@@ -38,12 +38,12 @@ n_nodes, n_edges = map(int, input().split(" "))
 heights = list(map(int, input().split(" ")))
 
 class Node:
-    def __init__(self, data):
-        self.parent = None
+    def __init__(self, index, data):
+        self.index = index
         self.data = data
         self.neighbours = []
 
-class DisjointUnionSet:
+class DisjointSetUnion:
     
     def __init__(self, indices: int):
         self.parent = list(range(indices))
@@ -78,12 +78,12 @@ for (key, node) in nodes.items():
     items.append((key, node))
 
 items.sort(key=lambda x: x[1].data) 
-for item in items:
-    print(item[1].data)
 
 sorted_indices = [item[0] for item in items]
 
 bot_start = 0
+
+distances = []
 
 while bot_start < len(sorted_indices):
     # For each arbitary bottom we need to find the minimum max'
@@ -91,13 +91,26 @@ while bot_start < len(sorted_indices):
     maxHeight = nodes[sorted_indices[bot_start]].data
 
     up_pointer = bot_start + 1
-    while (up_pointer < len(sorted_indices)):
+
+    dsu = DisjointSetUnion(len(nodes))
+    while (up_pointer < len(sorted_indices) and dsu.find_set(0) != dsu.find_set(1)):
         # We move upwards adding nodes to our graph
         # adding until we have connected start and end node
 
+        node = nodes[sorted_indices[up_pointer]]
+        maxHeight = node.data
+
+        for neighbour in node.neighbours:
+            if (neighbour.data >= minHeight and neighbour.data <= maxHeight):
+                dsu.union_sets(node.index, neighbour.index)
+
         up_pointer += 1
 
-
-
+    if (dsu.find_set(0) == dsu.find_set(1)):
+        distances.append(maxHeight - minHeight)
+    elif (up_pointer == len(sorted_indices)):
+        break
 
     bot_start += 1
+
+print(min(distances))
