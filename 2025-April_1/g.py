@@ -34,9 +34,70 @@ This could be done simply through
 
 """
 
-nodes, edges = map(int, input().split(" "))
+n_nodes, n_edges = map(int, input().split(" "))
 heights = list(map(int, input().split(" ")))
 
 class Node:
-    __init__(self):
-        
+    def __init__(self, data):
+        self.parent = None
+        self.data = data
+        self.neighbours = []
+
+class DisjointUnionSet:
+    
+    def __init__(self, indices: int):
+        self.parent = list(range(indices))
+
+    def find_set(self, v):
+        if v == self.parent[v]:
+            return v 
+        # if its not its own parent, need parent of representative
+        # and reassign itself to flatten the graph
+        self.parent[v] = self.find_set(self.parent[v])
+        return self.parent[v]
+
+    def union_sets(self, a, b):
+        a = self.find_set(a)
+        b = self.find_set(b)
+
+        if a != b:
+            self.parent[b] = a
+    
+
+nodes = {index: Node(index, data) for (index, data) in enumerate(heights)}
+
+for i in range(n_edges):
+    a, b = map(int, input().split())
+    a -= 1
+    b -= 1
+    nodes[a].neighbours.append(nodes[b])
+    nodes[b].neighbours.append(nodes[a])
+
+items = []
+for (key, node) in nodes.items():
+    items.append((key, node))
+
+items.sort(key=lambda x: x[1].data) 
+for item in items:
+    print(item[1].data)
+
+sorted_indices = [item[0] for item in items]
+
+bot_start = 0
+
+while bot_start < len(sorted_indices):
+    # For each arbitary bottom we need to find the minimum max'
+    minHeight = nodes[sorted_indices[bot_start]].data
+    maxHeight = nodes[sorted_indices[bot_start]].data
+
+    up_pointer = bot_start + 1
+    while (up_pointer < len(sorted_indices)):
+        # We move upwards adding nodes to our graph
+        # adding until we have connected start and end node
+
+        up_pointer += 1
+
+
+
+
+    bot_start += 1

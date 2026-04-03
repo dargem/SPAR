@@ -1,60 +1,70 @@
+"""
+
+"""
+
+class Node:
+
+    def __init__(self, string):
+        self.element = string
+        self.count = 0
+        self.outgoing = []
+        self.ingoing = []
+
+
 n = int(input())
 
-lst_pairs = []
+nodes = {}
 
 for i in range(n):
-    temp = i.split(' ')
-    if i[1] == '>':
-        idx1 = 2
-        idx2 = 0
-    if i[1] == '<':
-        idx1 = 0
-        idx2 = 2
+    first, comparator, second = input().split(" ")
+
+    if first not in nodes:
+        nodes[first] = Node(first)
+    if second not in nodes:
+        nodes[second] = Node(second)
     
-    pair = (i[idx1], i[idx2])
-    lst_pairs.append(pair)
-
-collection = input()
-max = ''
-letter_order = ''
-name = ''
-
-letters = collection.split()
-seen = []
-for i in letters:
-    if i not in seen:
-        seen.append(i)
-
-while len(letter_order) < len(collection):
-    for i in lst_pairs:
-        if i.reverse() in lst_pairs:
-            name = "IMPOSSIBLE"
-        if max in i and max != i[1]:
-            max = i[1]
-            letter_order += max
-            seen.remove(max)
-
-    for letter in letter_order:
-        for occurence in collection:
-            # name += 
-            pass
-
-
+    if (comparator == '<'):
+        nodes[first].outgoing.append(nodes[second])
+        nodes[second].ingoing.append(nodes[first])
+    elif (comparator == '>'):
+        nodes[second].outgoing.append(nodes[first])
+        nodes[first].ingoing.append(nodes[second])
 
     
+letters = input()
 
-def build_tuple_list(inp):
-    lst = []
-    for i in inp:
-        if i[1] == '>':
-            idx1 = 2
-            idx2 = 0
-        if i[1] == '<':
-            idx1 = 0
-            idx2 = 2
-        
-        tup = (i[idx1], i[idx2])
-        lst.append(tup)
+for letter in letters:
+    if letter not in nodes:
+        nodes[letter] = Node(letter)
+    
+    nodes[letter].count += 1
 
-    return lst
+nodes = [node for node in nodes.values()]
+sorted_nodes = []
 
+def some_removable(node_list):
+    for node in node_list:
+        if len(node.ingoing) == 0 or node.count == 0:
+            return True
+    return False
+
+
+while (some_removable(nodes)):
+    remove_list = []
+    for node in nodes:
+        if (len(node.ingoing)) == 0 or node.count == 0:
+            sorted_nodes.append(node)
+            remove_list.append(node)
+
+            for other_node in node.outgoing:
+                other_node.ingoing.remove(node)
+    
+    for remove in remove_list:
+        nodes.remove(remove)
+
+if (len(nodes) == 0):
+    # has removed all
+    for node in sorted_nodes:
+        print(node.element * node.count, end="")
+else:
+    print("IMPOSSIBLE")
