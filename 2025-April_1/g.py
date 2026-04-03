@@ -11,6 +11,7 @@ class DisjointSetUnion:
     
     def __init__(self, indices: int):
         self.parent = list(range(indices))
+        self.size = [1 for _ in range(indices)]
 
     def find_set(self, v):
         if v == self.parent[v]:
@@ -25,7 +26,10 @@ class DisjointSetUnion:
         b = self.find_set(b)
 
         if a != b:
+            if (self.size[a] < self.size[b]):
+                a, b = b, a # swap so a is always same or larger in size
             self.parent[b] = a
+            self.size[a] += self.size[b]
     
 
 nodes = {index: Node(index, data) for (index, data) in enumerate(heights)}
@@ -50,7 +54,7 @@ bot_start = 0
 distances = []
 
 while bot_start < len(sorted_indices):
-    # For each arbitary bottom we need to find the minimum max'
+    # For each arbitrary bottom we need to find the minimum max'
     minHeight = nodes[sorted_indices[bot_start]].data
     maxHeight = nodes[sorted_indices[bot_start]].data
 
