@@ -81,3 +81,43 @@ So in summary we need to
 - If these equal we now know its a partition as its non overlapping and areas perfectly sum up!
 - If its not equal its non overlapping but there's gaps so its a fail
 """
+
+num_bricks = int(input())
+
+from enum import Enum
+
+class Brace(Enum):
+    OPENING = 0
+    CLOSING = 1
+
+class EventList:
+    def __init__(self):
+        self.events = {}
+
+class Modifications:
+    def __init__(self):
+        self.insertions = []
+        self.removals = []
+
+event_holder = EventList()
+for _ in range(num_bricks):
+    start_x, start_y, width, height = map(int, input().split())
+
+    if start_y not in event_holder.events:
+        event_holder.events[start_y] = Modifications()
+    if start_y + height not in event_holder.events:
+        event_holder.events[start_y + height] = Modifications()
+    
+    event_holder.events[start_y].insertions.append((start_x, Brace.OPENING))
+    event_holder.events[start_y].insertions.append((start_x + width, Brace.CLOSING))
+    
+    event_holder.events[start_y + height].removals.append((start_x, Brace.OPENING))
+    event_holder.events[start_y + height].removals.append((start_x + width, Brace.CLOSING))
+
+# average readable python one liners                                     
+sorted_modifications = [item[1] for item in sorted(event_holder.events.items(), key=lambda y: y[0])]
+
+class WorkingSet:
+    
+
+for mod in sorted_modifications:
