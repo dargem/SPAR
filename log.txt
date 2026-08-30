@@ -1,0 +1,25 @@
+4
+3
+stole is -1
+ALICE has 1
+CASSIE has 1
+DANIEL has 1
+2
+2
+No theft
+No theft
+4
+3
+stole is 1
+ALICE has 1
+CASSIE has 1
+DANIEL has 1
+2
+2
+No theft
+No theft
+5
+3
+stole is 2
+ALICE has 1
+BOB has 2

@@ -1,0 +1,40 @@
+# if N < bees smaller than pain tolerance guaranteed to pass it
+
+from collections import deque
+r, c, k = list(map(int, input().split()))
+
+class Tile:
+    def __init__(self, price, row, column):
+        self.row = row
+        self.column = column
+        self.cost = None
+        self.price = price
+grid = {{}}
+
+total_obstacles = 0
+for i in range(r):
+    tiles = input()
+    for j in range(c):
+        price = 0
+        if tiles[j] == "W": price = 1
+        if tiles[j] == "Q": price = k
+
+        grid[i][j] = Tile(price, i, j)
+
+        if tiles[j] == "W" or tiles[j] == "Q":
+            total_obstacles += 1
+
+if total_obstacles < k:
+    print("Yes")
+    exit()
+
+grid[0][0].cost = 0
+q = deque()
+q.appendleft(grid[0][0])
+
+while len(q) != 0:
+    tile = q.pop()
+
+    neighbours = []
+    if tile.row > 0:
+        neighbours.append(tiles[])
